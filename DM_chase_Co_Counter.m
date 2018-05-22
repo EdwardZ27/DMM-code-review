@@ -1,4 +1,4 @@
-function f = DM_chase_Co_Counter(DM_Profile,DM_feed)    %re：输入分别是
+function f = DM_chase_Co_Counter(DM_Profile,DM_feed)    % 这个函数是solver，求解方程的，不用具体理解---再次编辑看git add效果
 
     global c A B
 
