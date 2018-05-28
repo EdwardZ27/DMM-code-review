@@ -6,13 +6,13 @@ function f = DM_Initial(DM_feed)
 
     global c 
     load Process\DM_Config.mat
-    Dual_Profile_Initial = zeros(6+5*c,DM_stage);
+    Dual_Profile_Initial = zeros(6+5*c,DM_stage);                             %re：这个变量每一列代表一个stage的数据
     Dual_Profile_Initial(:,1) = Dual_Initial_Stage_Cal(DM_feed);
     
     for j = 2:DM_stage
-        stage_feed = [ DM_feed(1:2);
-                       Dual_Profile_Initial(3,j-1);
-                       Dual_Profile_Initial(4+2*c:3+3*c,j-1); ];
+        stage_feed = [ DM_feed(1:2);                                          %re:前两个变量，分别是温度和压力，每次不变
+                       Dual_Profile_Initial(3,j-1);                           %re：profile矩阵中第3行，feed流量，用第j-1列的作为第j列的初值
+                       Dual_Profile_Initial(4+2*c:3+3*c,j-1); ];              %re：第10-12行的变量，分别是H2CO2CH4的浓度，用第j-1列的作为第j列的初值
         Dual_Profile_Initial(:,j) = Dual_Initial_Stage_Cal(stage_feed);
     end
     
@@ -46,7 +46,7 @@ function f = Dual_Initial_Stage_Cal(stage_feed)
     
     Qi_DM1 = zeros(c,1);Qi_DM2 = zeros(c,1);
     for i = 1:c
-        Qi_DM1(i) = Ji_DM1(i)/3/829561.4*dA_DM1*(Pf_DM*xrj0(i)-Pp_DM1*yi_DM1(i));
+        Qi_DM1(i) = Ji_DM1(i)/3/829561.4*dA_DM1*(Pf_DM*xrj0(i)-Pp_DM1*yi_DM1(i));    %re:传质方程 Ji是渗透的那个膜透量参数（GPU单位)
         Qi_DM2(i) = Ji_DM2(i)/3/829561.4*dA_DM2*(Pf_DM*xrj0(i)-Pp_DM2*yi_DM2(i));
     end
     Q_DM1 = sum(Qi_DM1);
